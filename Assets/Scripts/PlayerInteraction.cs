@@ -27,11 +27,7 @@ public class PlayerInteraction : MonoBehaviour
             return;
         }
 
-<<<<<<< Updated upstream
-        // Raycast from the center of the screen
-=======
-        // 2. Shoot raycast to detect doors
->>>>>>> Stashed changes
+        // 2. Shoot raycast from the center of the screen to detect doors
         Ray ray = playerCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
         if (Physics.Raycast(ray, out RaycastHit hit, interactDistance))
         {
@@ -52,30 +48,17 @@ public class PlayerInteraction : MonoBehaviour
     {
         isLockpicking = true;
 
-<<<<<<< Updated upstream
-        // 1. Position the lock Canvas slightly in front of the camera
+        // Position the lock Canvas slightly in front of the camera
         lockpickingAssembly.transform.position = playerCamera.transform.position + (playerCamera.transform.forward * canvasSpawnDistance);
 
-        // 2. Face the Canvas toward the camera
+        // Face the Canvas toward the camera
         lockpickingAssembly.transform.rotation = playerCamera.transform.rotation;
 
-        // 3. Enable the lock visuals
+        // Enable the lock visuals and freeze player movement
         lockpickingAssembly.SetActive(true);
-
-        // 4. Freeze player movement script
-=======
-        // Teleport the Canvas to be slightly in front of the camera
-        lockpickingAssembly.transform.position = playerCamera.transform.position + (playerCamera.transform.forward * canvasSpawnDistance);
-
-        // Rotate the Canvas so it perfectly faces the camera
-        lockpickingAssembly.transform.rotation = playerCamera.transform.rotation;
-
-        // Turn on the lock visuals and freeze the player
-        lockpickingAssembly.SetActive(true);
->>>>>>> Stashed changes
         playerController.enabled = false;
 
-        // 5. CRITICAL FIX: Unlock and show cursor so mouse-look moves the pick instead of the camera
+        // CRITICAL FIX: Unlock and show cursor so mouse-look moves the pick instead of the camera
         Cursor.lockState = CursorLockMode.None;
         Cursor.visible = true;
     }
