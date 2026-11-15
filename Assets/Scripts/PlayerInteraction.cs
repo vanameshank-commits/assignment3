@@ -17,6 +17,7 @@ public class PlayerInteraction : MonoBehaviour
     {
         if (isLockpicking)
         {
+            // Allow exiting the lock via Escape or Tab
             if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.Tab))
             {
                 StopLockpicking();
@@ -24,6 +25,7 @@ public class PlayerInteraction : MonoBehaviour
             return;
         }
 
+        // Raycast from the center of the screen
         Ray ray = playerCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
         RaycastHit hit;
 
@@ -31,6 +33,7 @@ public class PlayerInteraction : MonoBehaviour
         {
             if (hit.collider.CompareTag("Door"))
             {
+                // Prompt or press 'E' to begin
                 if (Input.GetKeyDown(KeyCode.E))
                 {
                     StartLockpicking();
@@ -43,23 +46,33 @@ public class PlayerInteraction : MonoBehaviour
     {
         isLockpicking = true;
 
-        // 1. Teleport the Canvas to be slightly in front of the camera
+        // 1. Position the lock Canvas slightly in front of the camera
         lockpickingAssembly.transform.position = playerCamera.transform.position + (playerCamera.transform.forward * canvasSpawnDistance);
 
-        // 2. Rotate the Canvas so it perfectly faces the camera
+        // 2. Face the Canvas toward the camera
         lockpickingAssembly.transform.rotation = playerCamera.transform.rotation;
 
-        // 3. Turn on the lock visuals
+        // 3. Enable the lock visuals
         lockpickingAssembly.SetActive(true);
 
-        // 4. Freeze the player
+        // 4. Freeze player movement script
         playerController.enabled = false;
+
+        // 5. CRITICAL FIX: Unlock and show cursor so mouse-look moves the pick instead of the camera
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
     }
 
     public void StopLockpicking()
     {
         isLockpicking = false;
         lockpickingAssembly.SetActive(false);
+
+        // Re-enable player movement
         playerController.enabled = true;
+
+        // Re-lock and hide cursor for FPS gameplay
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
 }
