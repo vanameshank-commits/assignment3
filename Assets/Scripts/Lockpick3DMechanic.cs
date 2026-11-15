@@ -31,6 +31,7 @@ public class Lockpick3DMechanic : MonoBehaviour
 
     void Start()
     {
+<<<<<<< Updated upstream
         // Randomize the sweet spot for this lock instance
         sweetSpotAngle = Random.Range(-maxAngle + sweetSpotTolerance, maxAngle - sweetSpotTolerance);
 
@@ -39,6 +40,23 @@ public class Lockpick3DMechanic : MonoBehaviour
             audioSource.clip = scrapeClip;
             audioSource.loop = true;
         }
+=======
+        // Randomize the sweet spot for the very first time
+        sweetSpotAngle = Random.Range(-maxAngle, maxAngle);
+>>>>>>> Stashed changes
+    }
+
+    // Add this method to reset the lock every time you interact with a door
+    void OnEnable()
+    {
+        isUnlocked = false;
+        isApplyingTorque = false;
+        currentPickAngle = 0f;
+        cylinderRotation = 0f;
+        sweetSpotAngle = Random.Range(-maxAngle, maxAngle);
+
+        if (rakePivot != null) rakePivot.localEulerAngles = Vector3.zero;
+        if (tensionTool != null) tensionTool.localEulerAngles = Vector3.zero;
     }
 
     void Update()
@@ -51,23 +69,19 @@ public class Lockpick3DMechanic : MonoBehaviour
 
     private void HandleRakeMovement()
     {
-        // Rake only swings if the player isn't applying tension
         if (!isApplyingTorque)
         {
             float mouseInput = Input.GetAxis("Mouse X");
             currentPickAngle -= mouseInput * pickTurnSpeed * Time.deltaTime;
 
-            // Keep the rake within the keyhole limits
             currentPickAngle = Mathf.Clamp(currentPickAngle, -maxAngle, maxAngle);
 
-            // Swing the rake around its pivot
             rakePivot.localEulerAngles = new Vector3(0, 0, currentPickAngle);
         }
     }
 
     private void HandleTensionTorque()
     {
-        // Apply torque with Spacebar
         if (Input.GetKey(KeyCode.Space))
         {
             isApplyingTorque = true;
@@ -81,10 +95,10 @@ public class Lockpick3DMechanic : MonoBehaviour
                 maxAllowedRotation = 90f * Mathf.Clamp01(distanceRatio);
             }
 
-            // Rotate the tension tool
             cylinderRotation += cylinderTurnSpeed * Time.deltaTime;
             cylinderRotation = Mathf.Clamp(cylinderRotation, 0, maxAllowedRotation);
 
+<<<<<<< Updated upstream
             // Apply rotation to the tension tool/cylinder
             tensionTool.localEulerAngles = new Vector3(0, 0, cylinderRotation);
 
@@ -101,8 +115,17 @@ public class Lockpick3DMechanic : MonoBehaviour
             if (cylinderRotation >= 89.9f && distanceFromSweetSpot <= sweetSpotTolerance)
             {
                 UnlockSuccess();
+=======
+            tensionTool.localEulerAngles = new Vector3(0, 0, cylinderRotation);
+
+            if (cylinderRotation >= 89.9f && distanceFromSweetSpot <= sweetSpotTolerance)
+            {
+                isUnlocked = true;
+                Debug.Log("Lock Unlocked!");
+
+                FindFirstObjectByType<PlayerInteraction>().UnlockCurrentDoor();
+>>>>>>> Stashed changes
             }
-            // Jammed Condition
             else if (cylinderRotation >= maxAllowedRotation)
             {
                 ShakeRakeTool3D();
@@ -114,6 +137,7 @@ public class Lockpick3DMechanic : MonoBehaviour
         }
     }
 
+<<<<<<< Updated upstream
     private void StopTorqueInput()
     {
         isApplyingTorque = false;
@@ -144,6 +168,9 @@ public class Lockpick3DMechanic : MonoBehaviour
         {
             clickTimer = 0f;
             if (oneShotAudioSource != null && clickClip != null)
+=======
+            if (cylinderRotation > 0)
+>>>>>>> Stashed changes
             {
                 // Pitch increases slightly the closer you are to the sweet spot
                 float pitch = Mathf.Lerp(1.5f, 0.8f, Mathf.Clamp01(distance / sweetSpotTolerance));
@@ -155,7 +182,10 @@ public class Lockpick3DMechanic : MonoBehaviour
 
     private void ShakeRakeTool3D()
     {
+<<<<<<< Updated upstream
         // Visual jitter to show the tool is jammed against the wall
+=======
+>>>>>>> Stashed changes
         float jitter = Random.Range(-1.5f, 1.5f);
         rakePivot.localEulerAngles = new Vector3(0, 0, currentPickAngle + jitter);
 
